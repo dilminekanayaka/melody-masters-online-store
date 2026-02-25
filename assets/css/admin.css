@@ -1045,6 +1045,15 @@
 /* ════════════════════════════════════
    RESPONSIVE BREAKPOINTS
 ════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   ADMIN RESPONSIVE — comprehensive mobile pass
+   1200px → tablet landscape
+    900px  → tablet portrait / sidebar collapse
+    768px  → large phone
+    540px  → small phone
+    380px  → very small phone
+═══════════════════════════════════════════════════ */
+
 @media (max-width: 1400px) {
   .dash-snapshot { grid-template-columns: repeat(3, 1fr); }
 }
@@ -1056,12 +1065,16 @@
   .dash-snapshot    { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* ── 900 px: sidebar off-canvas ── */
 @media (max-width: 900px) {
-  /* admin-shell is display:block — no grid to override */
-  .admin-sidebar        { transform: translateX(-100%); box-shadow: none; }
+  .admin-sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+    z-index: 999;
+  }
   .admin-sidebar.is-open {
     transform: translateX(0);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+    box-shadow: 4px 0 32px rgba(0,0,0,.6);
   }
   .admin-main           { margin-left: 0; }
   .admin-sidebar-toggle { display: flex; }
@@ -1072,56 +1085,81 @@
   .dash-snapshot        { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ── 768 px: large phone ── */
 @media (max-width: 768px) {
-  .admin-content    { padding: 16px 16px 32px; }
-  .admin-topbar     { padding: 0 16px; }
-  .admin-kpi-grid   { grid-template-columns: 1fr; }
-  .admin-filter-bar { flex-direction: column; align-items: stretch; }
+  .admin-content  { padding: 14px 14px 32px; }
+  .admin-topbar   { padding: 0 14px; height: 52px; }
+  .admin-topbar-title { font-size: 14px; }
+  .admin-kpi-grid { grid-template-columns: 1fr 1fr; }
+  .admin-filter-bar  { flex-direction: column; align-items: stretch; }
   .admin-filter-form { flex-direction: column; }
+
+  /* Tables scroll horizontally */
+  .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .admin-table      { min-width: 560px; }
+
+  /* Order detail panel */
+  .od-layout    { grid-template-columns: 1fr; }
+  .od-summary   { position: static; }
+
+  /* Notification drawer — full width on big phone */
+  .notif-drawer { width: 320px; }
+
+  /* Dashboard panels */
+  .dash-bottom-row  { grid-template-columns: 1fr; }
+  .admin-dash-row   { grid-template-columns: 1fr; }
 }
 
+/* ── 540 px: small phone ── */
 @media (max-width: 540px) {
-  .dash-snapshot        { grid-template-columns: 1fr 1fr; }
-  .admin-topbar-name    { display: none; }
+  .admin-content  { padding: 12px 12px 28px; }
+  .admin-topbar   { padding: 0 12px; }
+  .admin-kpi-grid { grid-template-columns: 1fr 1fr; }
+  .dash-snapshot  { grid-template-columns: 1fr 1fr; }
+
+  /* Hide user info text — keep avatar only */
   .admin-topbar-user-info { display: none; }
+
+  /* Quick-links fill width */
   .dash-quicklinks .admin-btn { flex: 1; justify-content: center; }
+
+  /* Topbar right stack */
+  .admin-topbar-right { gap: 6px; }
+
+  /* Notification drawer: anchored full screen */
+  .notif-drawer {
+    position: fixed;
+    top: 52px; left: 8px; right: 8px;
+    width: auto;
+    max-height: calc(100vh - 70px);
+  }
+
+  /* Admin flash / alerts */
+  .admin-flash { font-size: 12px; padding: 10px 14px; }
+
+  /* Table cells compact */
+  .admin-table th,
+  .admin-table td { padding: 10px 12px; font-size: 12px; }
 }
 
-@media (max-width: 400px) {
-  .dash-snapshot { grid-template-columns: 1fr; }
+/* ── 380 px: very small phone ── */
+@media (max-width: 380px) {
+  .dash-snapshot  { grid-template-columns: 1fr; }
+  .admin-kpi-grid { grid-template-columns: 1fr; }
+  .admin-topbar-title { display: none; }
 }
 
-/* ── Chart wrapper & subtitle ── */
-.dash-chart-wrap {
-  padding: 20px 24px 24px;
-  position: relative;
-}
-
-.dash-chart-wrap canvas {
-  width: 100% !important;
-  max-height: 260px;
-}
-
-.dash-chart-sub {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 2px 0 0;
-  line-height: 1.4;
-}
+/* ── Chart wrapper ── */
+.dash-chart-wrap { padding: 16px 18px 20px; position: relative; }
+.dash-chart-wrap canvas { width: 100% !important; max-height: 240px; }
+.dash-chart-sub { font-size: 12px; color: var(--muted); margin: 2px 0 0; line-height: 1.4; }
 
 /* ── Dash row right column ── */
-.dash-row-right {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+.dash-row-right { display: flex; flex-direction: column; gap: 20px; }
 
 /* ── Top product price group ── */
 .dash-top-price-group {
-  text-align: right;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
+  text-align: right; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px;
 }
+

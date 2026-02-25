@@ -75,16 +75,21 @@ if (isset($_SESSION['user_id'])) {
         Melody<span>Masters</span>
       </a>
 
-      <!-- Search -->
-      <form class="search-bar" action="shop.php" method="GET">
+      <!-- Search bar — visible on desktop, hidden on mobile until icon tap -->
+      <form class="search-bar" id="siteSearchBar" action="/melody-masters-online-store/shop.php" method="GET">
         <input type="text" name="q" placeholder="Search for instruments, brands, gear…" autocomplete="off">
         <button type="submit" class="search-btn" aria-label="Search">
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </button>
       </form>
 
-      <!-- Right Actions -->
+      <!-- Right actions — always aligned to the right -->
       <div class="header-actions">
+
+        <!-- Search icon (mobile only — toggles the search bar dropdown) -->
+        <button class="header-icon-btn header-search-toggle" id="mobileSearchBtn" aria-label="Search" aria-expanded="false">
+          <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
 
         <?php if (isset($_SESSION['user_id']) && $user_name): ?>
           <!-- Logged-in user avatar + dropdown -->
@@ -136,7 +141,7 @@ if (isset($_SESSION['user_id'])) {
           </div>
 
         <?php else: ?>
-          <!-- Guest -->
+          <!-- Guest links -->
           <a href="/melody-masters-online-store/login.php" class="header-text-btn">Sign In</a>
           <a href="/melody-masters-online-store/register.php" class="btn-header-register">Register</a>
         <?php endif; ?>
@@ -153,7 +158,7 @@ if (isset($_SESSION['user_id'])) {
     </div>
   </div>
 
-  <!-- Category Nav — physical categories from DB + Digital Downloads type link -->
+  <!-- Category Nav -->
   <?php
   $current_script  = basename($_SERVER['PHP_SELF']);
   $current_cat     = trim($_GET['cat']  ?? '');
@@ -187,32 +192,73 @@ if (isset($_SESSION['user_id'])) {
   </nav>
 </header>
 
-<!-- Dropdown close on outside click -->
+<!-- ===== MOBILE SEARCH OVERLAY ===== -->
+<div class="mobile-search-overlay" id="mobileSearchOverlay">
+  <form class="mobile-search-form" action="/melody-masters-online-store/shop.php" method="GET">
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--muted);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" name="q" id="mobileSearchInput" placeholder="Search instruments, brands, gear…" autocomplete="off">
+    <button type="button" class="mobile-search-close" id="mobileSearchClose" aria-label="Close search">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </form>
+</div>
+
+<!-- Header JS -->
 <script>
-  (function() {
-    const btn      = document.getElementById('userMenuBtn');
-    const dropdown = document.getElementById('userDropdown');
-    const menu     = document.getElementById('userMenu');
-    if (!btn) return;
-
-    btn.addEventListener('click', function(e) {
+(function() {
+  /* ── User dropdown ── */
+  var uBtn  = document.getElementById('userMenuBtn');
+  var uDrp  = document.getElementById('userDropdown');
+  var uMenu = document.getElementById('userMenu');
+  if (uBtn && uDrp) {
+    uBtn.addEventListener('click', function(e) {
       e.stopPropagation();
-      const open = dropdown.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open);
+      var open = uDrp.classList.toggle('is-open');
+      uBtn.setAttribute('aria-expanded', String(open));
     });
-
     document.addEventListener('click', function(e) {
-      if (!menu.contains(e.target)) {
-        dropdown.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
+      if (uMenu && !uMenu.contains(e.target)) {
+        uDrp.classList.remove('is-open');
+        uBtn.setAttribute('aria-expanded', 'false');
       }
     });
-
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
-        dropdown.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
+        uDrp.classList.remove('is-open');
+        uBtn.setAttribute('aria-expanded', 'false');
       }
     });
-  })();
+  }
+
+  /* ── Mobile search toggle ── */
+  var mBtn    = document.getElementById('mobileSearchBtn');
+  var overlay = document.getElementById('mobileSearchOverlay');
+  var mInput  = document.getElementById('mobileSearchInput');
+  var mClose  = document.getElementById('mobileSearchClose');
+
+  function openMobileSearch() {
+    if (!overlay) return;
+    overlay.classList.add('is-open');
+    if (mBtn) mBtn.setAttribute('aria-expanded', 'true');
+    setTimeout(function(){ if (mInput) mInput.focus(); }, 80);
+  }
+  function closeMobileSearch() {
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    if (mBtn) mBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  if (mBtn && overlay) {
+    mBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      overlay.classList.contains('is-open') ? closeMobileSearch() : openMobileSearch();
+    });
+  }
+  if (mClose) {
+    mClose.addEventListener('click', closeMobileSearch);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMobileSearch();
+  });
+})();
 </script>
