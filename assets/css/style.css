@@ -3107,7 +3107,77 @@ h1,h2,h3,h4 { font-weight: 600; }
   margin-bottom: 32px;
 }
 
+/* Cancelled order banner */
+.od-cancelled-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 28px 32px;
+  margin-bottom: 40px;
+  background: rgba(192,57,43,0.07);
+  border: 1px solid rgba(192,57,43,0.25);
+  border-radius: var(--r);
+  position: relative;
+  overflow: hidden;
+}
+
+.od-cancelled-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at left center, rgba(192,57,43,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.od-cancelled-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(192,57,43,0.15);
+  border: 2px solid rgba(192,57,43,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e57373;
+  box-shadow: 0 0 20px rgba(192,57,43,0.2);
+}
+
+.od-cancelled-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.od-cancelled-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e57373;
+  letter-spacing: -0.2px;
+}
+
+.od-cancelled-sub {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.od-cancelled-sub strong {
+  color: var(--white);
+}
+
+.od-cancelled-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
 /* Progress tracker */
+
 .od-tracker {
   display: flex;
   align-items: flex-start;

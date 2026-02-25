@@ -153,8 +153,31 @@ if ($step_idx === false) $step_idx = -1;
       </div>
     </div>
 
-    <!-- PROGRESS TRACKER (only shown for non-cancelled) -->
-    <?php if ($order['status'] !== 'Cancelled'): ?>
+    <!-- CANCELLED BANNER -->
+    <?php if ($order['status'] === 'Cancelled'): ?>
+    <div class="od-cancelled-banner">
+      <div class="od-cancelled-icon">
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <div class="od-cancelled-body">
+        <h2 class="od-cancelled-title">Order Cancelled</h2>
+        <p class="od-cancelled-sub">
+          This order was cancelled on <strong><?= date('d M Y', strtotime($order['updated_at'] ?? $order['created_at'])) ?></strong>.
+          If you believe this is a mistake, please contact our support team.
+        </p>
+        <div class="od-cancelled-actions">
+          <a href="../shop.php" class="btn-primary">Browse the Shop</a>
+          <a href="orders.php" class="btn-ghost">View All Orders</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS TRACKER (active orders only) -->
+    <?php else: ?>
     <div class="od-tracker">
       <?php foreach ($steps as $i => $step):
         $is_done   = $i < $step_idx;
@@ -187,6 +210,7 @@ if ($step_idx === false) $step_idx = -1;
       <?php endforeach; ?>
     </div>
     <?php endif; ?>
+
 
 
     <!-- TWO COLUMN LAYOUT -->
