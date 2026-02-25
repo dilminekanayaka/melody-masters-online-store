@@ -2412,11 +2412,26 @@ h1,h2,h3,h4 { font-weight: 600; }
   color: var(--muted);
   padding: 20px;
   background: var(--bg-alt);
+  border: 1px solid var(--line-md);
   border-radius: var(--r);
   text-align: center;
 }
 
 .review-signin-notice a { color: var(--gold); }
+
+.review-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7fbf9a;
+  background: rgba(46,125,79,0.12);
+  border: 1px solid rgba(46,125,79,0.25);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+}
 
 /* Star picker */
 .star-picker {
@@ -3095,36 +3110,62 @@ h1,h2,h3,h4 { font-weight: 600; }
 /* Progress tracker */
 .od-tracker {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 40px;
-  padding: 24px 28px;
+  padding: 28px 32px;
   background: var(--bg-card);
   border: 1px solid var(--line);
   border-radius: var(--r);
   overflow-x: auto;
 }
 
+/* Each step: dot above, text below */
 .tracker-step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
+  min-width: 90px;
+}
+
+/* Dot wrapper for pulse ring positioning */
+.tracker-dot-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+}
+
+.tracker-pulse-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  opacity: 0.4;
+  animation: tracker-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tracker-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.4; }
+  50%       { transform: scale(1.18); opacity: 0.1; }
 }
 
 .tracker-dot {
-  width: 32px;
-  height: 32px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--bg);
   border: 2px solid var(--line-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
   color: var(--muted);
-  transition: all var(--t);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .tracker-step--done .tracker-dot {
@@ -3137,32 +3178,64 @@ h1,h2,h3,h4 { font-weight: 600; }
   background: rgba(200,151,60,0.15);
   border-color: var(--gold);
   color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(200,151,60,0.12);
+  box-shadow: 0 0 0 4px rgba(200,151,60,0.1);
+}
+
+.tracker-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
 }
 
 .tracker-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+.tracker-desc {
+  font-size: 11px;
+  color: var(--dim);
   white-space: nowrap;
 }
 
 .tracker-step--active .tracker-label { color: var(--gold); }
+.tracker-step--active .tracker-desc  { color: var(--muted); }
 .tracker-step--done .tracker-label   { color: #7fbf9a; }
+.tracker-step--done .tracker-desc    { color: #5a9a72; }
 
+/* Connector line — sits between two .tracker-step siblings */
 .tracker-line {
   flex: 1;
   height: 2px;
+  min-width: 20px;
   background: var(--line-md);
-  margin: 0 8px;
-  margin-bottom: 20px;
-  min-width: 32px;
-  transition: background var(--t);
+  border-radius: 2px;
+  overflow: hidden;
+  /* Push down by half the dot height (52/2 = 26px) so it bisects the dots */
+  align-self: flex-start;
+  margin-top: 26px;
 }
 
-.tracker-line--done { background: #7fbf9a; }
+.tracker-line-fill {
+  height: 100%;
+  width: 0%;
+}
+
+.tracker-line--done .tracker-line-fill {
+  width: 100%;
+  background: linear-gradient(90deg, #7fbf9a, #5ca077);
+}
+
+.tracker-line--active .tracker-line-fill {
+  width: 50%;
+  background: linear-gradient(90deg, #7fbf9a, var(--gold));
+}
 
 /* Two-col layout */
 .od-layout {
@@ -3327,7 +3400,11 @@ h1,h2,h3,h4 { font-weight: 600; }
 @media (max-width: 900px) {
   .od-layout { grid-template-columns: 1fr; }
   .od-summary { position: static; }
-  .od-tracker { padding: 18px 16px; }
+  .od-tracker { padding: 18px 12px; }
+  .tracker-dot { width: 40px; height: 40px; }
+  .tracker-dot-wrap { width: 40px; height: 40px; }
+  .tracker-step { width: 70px; }
+  .tracker-desc { display: none; }
 }
 
 @media (max-width: 640px) {

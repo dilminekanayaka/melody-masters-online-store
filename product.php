@@ -59,9 +59,30 @@ if (isset($_GET['add']) && (int)$_GET['add'] === $product_id) {
 $review_error   = '';
 $review_success = '';
 
+/* Check if logged-in user is a verified buyer of this product */
+$is_verified_buyer = false;
+if (isset($_SESSION['user_id'])) {
+    $vb_stmt = mysqli_prepare($conn,
+        "SELECT oi.id
+         FROM order_items oi
+         JOIN orders o ON o.id = oi.order_id
+         WHERE o.user_id = ?
+           AND oi.product_id = ?
+           AND o.status IN ('completed','delivered')
+         LIMIT 1"
+    );
+    mysqli_stmt_bind_param($vb_stmt, "ii", $_SESSION['user_id'], $product_id);
+    mysqli_stmt_execute($vb_stmt);
+    mysqli_stmt_store_result($vb_stmt);
+    $is_verified_buyer = mysqli_stmt_num_rows($vb_stmt) > 0;
+    mysqli_stmt_close($vb_stmt);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     if (!isset($_SESSION['user_id'])) {
         $review_error = "You must be signed in to leave a review.";
+    } elseif (!$is_verified_buyer) {
+        $review_error = "Only verified buyers can leave a review.";
     } else {
         $rating  = (int)($_POST['rating'] ?? 0);
         $comment = trim($_POST['comment'] ?? '');
@@ -99,7 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
    FETCH REVIEWS
 ============================================================ */
 $rev_stmt = mysqli_prepare($conn,
-    "SELECT r.rating, r.comment, r.created_at, u.name AS reviewer
+    "SELECT r.rating, r.comment, r.created_at, u.name AS reviewer,
+            CASE WHEN EXISTS (
+              SELECT 1 FROM order_items oi
+              JOIN orders o ON o.id = oi.order_id
+              WHERE o.user_id = r.user_id
+                AND oi.product_id = r.product_id
+                AND o.status IN ('completed','delivered')
+            ) THEN 1 ELSE 0 END AS verified_buyer
      FROM reviews r
      JOIN users u ON u.id = r.user_id
      WHERE r.product_id = ?
@@ -302,6 +330,9 @@ $cat_slug     = strtolower(str_replace(' ', '-', $product['category'] ?? ''));
           <div class="review-body">
             <div class="review-top">
               <strong class="review-name"><?= htmlspecialchars($rv['reviewer']) ?></strong>
+              <?php if ($rv['verified_buyer']): ?>
+                <span class="review-verified-badge">✔ Verified Buyer</span>
+              <?php endif; ?>
               <span class="review-date"><?= $date_fmt ?></span>
               <span class="review-stars"><?= $rv_stars ?></span>
             </div>
@@ -323,6 +354,12 @@ $cat_slug     = strtolower(str_replace(' ', '-', $product['category'] ?? ''));
         <?php if (!isset($_SESSION['user_id'])): ?>
           <div class="review-signin-notice">
             <a href="login.php">Sign in</a> to leave a review.
+          </div>
+
+        <?php elseif (!$is_verified_buyer): ?>
+          <div class="review-signin-notice">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-3px;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Only verified buyers can write a review. Purchase this product to share your experience.
           </div>
 
         <?php else: ?>

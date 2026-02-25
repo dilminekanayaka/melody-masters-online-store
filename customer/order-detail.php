@@ -35,7 +35,7 @@ if (!$order) {
    FETCH ORDER ITEMS
 ============================================================ */
 $items_stmt = mysqli_prepare($conn,
-    "SELECT oi.quantity, oi.price, oi.download_count, 
+    "SELECT oi.quantity, oi.price, oi.download_count,
             p.id AS product_id, p.name, p.image, p.type,
             dp.download_limit
      FROM order_items oi
@@ -51,16 +51,24 @@ $items = mysqli_fetch_all(mysqli_stmt_get_result($items_stmt), MYSQLI_ASSOC);
    HELPERS
 ============================================================ */
 function od_status_badge(string $status): string {
-    $map = [
-        'Pending'    => ['icon' => '⏳', 'class' => 'badge-pending'],
-        'Processing' => ['icon' => '⚙', 'class' => 'badge-processing'],
-        'Shipped'    => ['icon' => '🚚', 'class' => 'badge-shipped'],
-        'Delivered'  => ['icon' => '✓', 'class' => 'badge-delivered'],
-        'Cancelled'  => ['icon' => '✕', 'class' => 'badge-cancelled'],
+    $icons = [
+        'Pending'    => '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        'Processing' => '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>',
+        'Shipped'    => '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+        'Delivered'  => '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+        'Cancelled'  => '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
     ];
-    $cfg = $map[$status] ?? ['icon' => '•', 'class' => 'badge-pending'];
-    return '<span class="order-badge ' . $cfg['class'] . '">'
-         . $cfg['icon'] . ' ' . htmlspecialchars($status)
+    $classes = [
+        'Pending'    => 'badge-pending',
+        'Processing' => 'badge-processing',
+        'Shipped'    => 'badge-shipped',
+        'Delivered'  => 'badge-delivered',
+        'Cancelled'  => 'badge-cancelled',
+    ];
+    $icon = $icons[$status]   ?? '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>';
+    $cls  = $classes[$status] ?? 'badge-pending';
+    return '<span class="order-badge ' . $cls . '">'
+         . $icon . ' ' . htmlspecialchars($status)
          . '</span>';
 }
 
@@ -76,9 +84,52 @@ foreach ($items as $item) {
     }
 }
 
-$steps    = $is_digital_only ? ['Pending', 'Delivered'] : ['Pending', 'Processing', 'Shipped', 'Delivered'];
-$step_idx = array_search($order['status'], $steps);
-if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
+/* Step definitions — icon, label, desc, matching status value */
+$steps = $is_digital_only
+    ? [
+        [
+            'status' => 'Pending',
+            'label'  => 'Order Placed',
+            'desc'   => 'We received your order',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+        ],
+        [
+            'status' => 'Delivered',
+            'label'  => 'Ready',
+            'desc'   => 'Your files are available',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+        ],
+    ]
+    : [
+        [
+            'status' => 'Pending',
+            'label'  => 'Order Placed',
+            'desc'   => 'We received your order',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>',
+        ],
+        [
+            'status' => 'Processing',
+            'label'  => 'Processing',
+            'desc'   => 'Preparing your items',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>',
+        ],
+        [
+            'status' => 'Shipped',
+            'label'  => 'Shipped',
+            'desc'   => 'On the way to you',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+        ],
+        [
+            'status' => 'Delivered',
+            'label'  => 'Delivered',
+            'desc'   => 'Enjoy your purchase!',
+            'icon'   => '<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+        ],
+    ];
+
+$step_statuses = array_column($steps, 'status');
+$step_idx = array_search($order['status'], $step_statuses);
+if ($step_idx === false) $step_idx = -1;
 ?>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
@@ -100,7 +151,6 @@ if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
         <h1 class="orders-heading">Order #<?= $order_id ?></h1>
         <span class="order-date" style="margin-top:4px;display:block;">Placed on <?= $date_fmt ?></span>
       </div>
-      <?= od_status_badge($order['status']) ?>
     </div>
 
     <!-- PROGRESS TRACKER (only shown for non-cancelled) -->
@@ -109,22 +159,35 @@ if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
       <?php foreach ($steps as $i => $step):
         $is_done   = $i < $step_idx;
         $is_active = $i === $step_idx;
-        $cls       = $is_active ? 'tracker-step--active' : ($is_done ? 'tracker-step--done' : '');
+        $cls = $is_active ? 'tracker-step--active' : ($is_done ? 'tracker-step--done' : '');
       ?>
       <div class="tracker-step <?= $cls ?>">
-        <div class="tracker-dot">
-          <?php if ($is_done): ?>
-            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          <?php else: ?><?= $i + 1 ?><?php endif; ?>
+        <div class="tracker-dot-wrap">
+          <?php if ($is_active): ?>
+            <div class="tracker-pulse-ring"></div>
+          <?php endif; ?>
+          <div class="tracker-dot">
+            <?php if ($is_done): ?>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <?php else: ?>
+              <?= $step['icon'] ?>
+            <?php endif; ?>
+          </div>
         </div>
-        <span class="tracker-label"><?= $step ?></span>
+        <div class="tracker-info">
+          <span class="tracker-label"><?= htmlspecialchars($step['label']) ?></span>
+          <span class="tracker-desc"><?= htmlspecialchars($step['desc']) ?></span>
+        </div>
       </div>
       <?php if ($i < count($steps) - 1): ?>
-      <div class="tracker-line <?= $i < $step_idx ? 'tracker-line--done' : '' ?>"></div>
+      <div class="tracker-line <?= $i < $step_idx ? 'tracker-line--done' : ($i === $step_idx ? 'tracker-line--active' : '') ?>">
+        <div class="tracker-line-fill"></div>
+      </div>
       <?php endif; ?>
       <?php endforeach; ?>
     </div>
     <?php endif; ?>
+
 
     <!-- TWO COLUMN LAYOUT -->
     <div class="od-layout">
@@ -133,9 +196,9 @@ if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
       <div class="od-items-col">
 
         <!-- ── DEDICATED DIGITAL DOWNLOADS PANEL ── -->
-        <?php 
+        <?php
         $digital_items = array_filter($items, function($i){ return $i['type'] === 'digital'; });
-        if (!empty($digital_items)): 
+        if (!empty($digital_items)):
         ?>
         <div class="od-section od-section--primary digital-downloads-hero">
             <div>
@@ -147,12 +210,12 @@ if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
                         Your files will be available for download here once the order is approved.
                     <?php endif; ?>
                 </p>
-                
+
                 <div class="hero-download-list">
                     <?php foreach ($digital_items as $di): ?>
                     <div class="hero-dl-item">
                         <?php if ($order['status'] === 'Delivered'): ?>
-                        <a href="../download.php?oid=<?= $order_id ?>&pid=<?= $di['product_id'] ?>" 
+                        <a href="../download.php?oid=<?= $order_id ?>&pid=<?= $di['product_id'] ?>"
                            class="btn-primary hero-dl-btn">
                            Download Now
                         </a>
@@ -202,7 +265,10 @@ if ($step_idx === false) $step_idx = -1; // Cancelled or unknown
             <?= htmlspecialchars($order['city']) ?>, <?= htmlspecialchars($order['postcode']) ?><br>
             <?= htmlspecialchars($order['country']) ?><br>
             <?php if ($order['phone']): ?>
-            <span style="color:var(--muted);font-size:13px;">📞 <?= htmlspecialchars($order['phone']) ?></span>
+            <span style="color:var(--muted);font-size:13px;display:flex;align-items:center;gap:5px;margin-top:6px;">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 6.07 6.07l.86-.86a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <?= htmlspecialchars($order['phone']) ?>
+            </span>
             <?php endif; ?>
           </div>
         </div>
