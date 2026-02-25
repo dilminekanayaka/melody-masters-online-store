@@ -80,12 +80,151 @@ adminHead('Dashboard', 'dashboard');
 .dw-left h2 { font-size:22px; font-weight:700; color:var(--dtext); letter-spacing:-.4px; margin:0 0 4px; }
 .dw-left p  { font-size:13px; color:var(--dsub); margin:0; }
 .dw-clock   { font-size:13px; color:var(--dsub); }
-.dw-btns    { display:flex; gap:8px; }
+.dw-btns    { display:flex; gap:8px; align-items:center; }
 .d-btn      { display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; font-family:inherit; transition:.15s; text-decoration:none; }
 .d-btn-p    { background:var(--brand-red); color:#000; }
 .d-btn-p:hover { background:#d4a835; }
 .d-btn-g    { background:rgba(255,255,255,.05); color:var(--dsub); border:1px solid var(--db); }
 .d-btn-g:hover{ background:rgba(255,255,255,.09); color:var(--dtext); }
+
+/* Bell button */
+.d-bell-wrap { position:relative; }
+.d-bell {
+  width:36px; height:36px; border-radius:8px;
+  background:rgba(255,255,255,.05); border:1px solid var(--db);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--dsub); cursor:pointer; transition:.15s;
+  position:relative;
+}
+.d-bell:hover { background:rgba(255,255,255,.09); color:var(--dtext); }
+.d-bell-badge {
+  position:absolute; top:-4px; right:-4px;
+  min-width:16px; height:16px; padding:0 4px;
+  background:#ef4444; border-radius:8px;
+  font-size:10px; font-weight:700; color:#fff;
+  display:none; align-items:center; justify-content:center;
+  border:2px solid #111118;
+  line-height:1;
+}
+.d-bell-badge.show { display:flex; }
+.d-bell-badge.pulse { animation:bell-pulse 1s ease-in-out 3; }
+@keyframes bell-pulse {
+  0%,100% { transform:scale(1); }
+  50%      { transform:scale(1.3); }
+}
+
+/* Notification drawer */
+.d-notif-drawer {
+  position:absolute; top:calc(100% + 8px); right:0;
+  width:360px; max-height:420px;
+  background:#16161f; border:1px solid rgba(255,255,255,.1);
+  border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5);
+  overflow:hidden; z-index:999;
+  display:none; flex-direction:column;
+  animation:drawer-in .18s ease;
+}
+.d-notif-drawer.open { display:flex; }
+@keyframes drawer-in {
+  from { opacity:0; transform:translateY(-6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.d-notif-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.d-notif-head h3 { font-size:13px; font-weight:700; color:var(--dtext); margin:0; }
+.d-notif-clear { font-size:11px; color:var(--brand-red); cursor:pointer; font-weight:600; background:none; border:none; font-family:inherit; }
+.d-notif-clear:hover { text-decoration:underline; }
+.d-notif-list { overflow-y:auto; flex:1; }
+.d-notif-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:11px 16px; border-bottom:1px solid rgba(255,255,255,.04);
+  text-decoration:none; transition:.12s;
+}
+.d-notif-item:last-child { border-bottom:none; }
+.d-notif-item:hover { background:rgba(255,255,255,.03); }
+.d-ni-ico {
+  width:32px; height:32px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.d-ni-ico--order    { background:rgba(79,142,247,.15); color:#4f8ef7; }
+.d-ni-ico--customer { background:rgba(16,185,129,.15); color:#10b981; }
+.d-ni-body { flex:1; min-width:0; }
+.d-ni-title { font-size:12px; font-weight:600; color:var(--dtext); display:block; }
+.d-ni-sub   { font-size:11px; color:var(--ddim); display:block; margin-top:1px; }
+.d-ni-time  { font-size:10px; color:var(--ddim); white-space:nowrap; flex-shrink:0; margin-top:2px; }
+.d-notif-empty { padding:24px; text-align:center; font-size:13px; color:var(--ddim); }
+
+/* Live Activity panel */
+.dact-list { display:flex; flex-direction:column; max-height:340px; overflow-y:auto; }
+.dact-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 20px; border-bottom:1px solid rgba(255,255,255,.04);
+  animation:act-slide-in .3s ease;
+}
+@keyframes act-slide-in {
+  from { opacity:0; transform:translateX(-8px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+.dact-item:last-child { border-bottom:none; }
+.dact-ico {
+  width:34px; height:34px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.dact-ico--order    { background:rgba(79,142,247,.12); color:#4f8ef7; }
+.dact-ico--customer { background:rgba(16,185,129,.12); color:#10b981; }
+.dact-body { flex:1; min-width:0; }
+.dact-title { font-size:13px; font-weight:500; color:var(--dtext); display:block; }
+.dact-sub   { font-size:11px; color:var(--ddim); display:block; margin-top:1px; }
+.dact-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+.dact-time  { font-size:10px; color:var(--ddim); white-space:nowrap; }
+.dact-new {
+  font-size:9px; font-weight:800; letter-spacing:.5px;
+  background:rgba(16,185,129,.15); color:#10b981;
+  border:1px solid rgba(16,185,129,.3); border-radius:4px;
+  padding:1px 5px; text-transform:uppercase;
+  display:flex; align-items:center; gap:3px;
+}
+.dact-new::before {
+  content:''; width:5px; height:5px; border-radius:50%;
+  background:#10b981; animation:act-pulse 1.2s ease-in-out infinite;
+}
+@keyframes act-pulse {
+  0%,100% { opacity:1; } 50% { opacity:.3; }
+}
+
+/* Toast notifications */
+#d-toast-zone {
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  display:flex; flex-direction:column; gap:10px;
+  pointer-events:none;
+}
+.d-toast {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px 16px; border-radius:10px;
+  background:#16161f; border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+  min-width:280px; max-width:340px;
+  pointer-events:auto;
+  animation:toast-in .3s cubic-bezier(.34,1.56,.64,1);
+}
+.d-toast--exit { animation:toast-out .25s ease forwards; }
+@keyframes toast-in  { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes toast-out { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(40px)} }
+.d-toast-ico {
+  width:32px; height:32px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.d-toast--order    .d-toast-ico { background:rgba(79,142,247,.2); color:#4f8ef7; }
+.d-toast--customer .d-toast-ico { background:rgba(16,185,129,.2); color:#10b981; }
+.d-toast-body { flex:1; min-width:0; }
+.d-toast-title { font-size:13px; font-weight:700; color:var(--dtext); display:block; }
+.d-toast-sub   { font-size:12px; color:var(--ddim); display:block; margin-top:2px; }
+.d-toast-close { background:none; border:none; color:var(--ddim); cursor:pointer; font-size:16px; line-height:1; padding:0; align-self:flex-start; }
+.d-toast-close:hover { color:var(--dtext); }
+.d-toast--order    { border-left:3px solid #4f8ef7; }
+.d-toast--customer { border-left:3px solid #10b981; }
 
 /* Snapshot strip */
 .dsnap      { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
@@ -207,6 +346,8 @@ adminHead('Dashboard', 'dashboard');
 @media(max-width:900px) { .dsnap{grid-template-columns:repeat(2,1fr);} .dw{flex-direction:column;align-items:flex-start;} }
 @media(max-width:640px) { .dkpi-grid{grid-template-columns:1fr;} .dsnap{grid-template-columns:1fr 1fr;} }
 </style>
+
+
 
 <!-- ── WELCOME ── -->
 <div class="dw">
@@ -388,6 +529,26 @@ adminHead('Dashboard', 'dashboard');
 
 </div>
 
+<!-- ── LIVE ACTIVITY FEED ── -->
+<div class="dpanel" style="margin-bottom:16px;">
+  <div class="dpanel-head">
+    <div>
+      <h2 class="dpanel-title">Live Activity
+        <span id="actBadge" style="display:none;margin-left:8px;" class="dact-new"><!-- pulse dot set by JS --></span>
+      </h2>
+      <p class="dpanel-sub">Orders &amp; new customers in the last hour &mdash; auto-refreshes every 30s</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="actStatus" style="font-size:11px;color:var(--ddim);">Polling…</span>
+      <a href="orders.php" class="dpanel-link">All orders →</a>
+    </div>
+  </div>
+  <div class="dact-list" id="actList">
+    <!-- populated by JS -->
+    <div class="dempty" id="actEmpty">No activity in the last hour</div>
+  </div>
+</div>
+
 <!-- ── BOTTOM ROW: Products + Alerts/Customers ── -->
 <div class="drow-2col">
 
@@ -487,41 +648,115 @@ adminHead('Dashboard', 'dashboard');
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 <script>
 (function(){
-  /* Live clock */
-  function tick(){
-    var d=new Date(), el=document.getElementById('dashClock');
-    if(!el) return;
-    var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var h=d.getHours(), m=('0'+d.getMinutes()).slice(-2);
-    el.textContent=days[d.getDay()]+', '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' · '+(h>12?h-12:h||12)+':'+m+(h>=12?' PM':' AM');
-  }
-  tick(); setInterval(tick,10000);
 
-  /* Chart defaults */
-  Chart.defaults.color='#9997a6';
-  Chart.defaults.font.family="'Inter',sans-serif";
-  Chart.defaults.font.size=11;
+/* ── Live clock ── */
+function tick(){
+  var d=new Date(), el=document.getElementById('dashClock');
+  if(!el) return;
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var h=d.getHours(), m=('0'+d.getMinutes()).slice(-2);
+  el.textContent=days[d.getDay()]+', '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' · '+(h>12?h-12:h||12)+':'+m+(h>=12?' PM':' AM');
+}
+tick(); setInterval(tick,10000);
 
+/* ── Chart defaults ── */
+Chart.defaults.color='#9997a6';
+Chart.defaults.font.family="'Inter',sans-serif";
+Chart.defaults.font.size=11;
 
+/* ── Donut ── */
+var sd=document.getElementById('statusDonut');
+if(sd){
+  new Chart(sd.getContext('2d'),{type:'doughnut',data:{
+    labels:['Delivered','Processing','Shipped','Pending','Cancelled'],
+    datasets:[{
+      data:[<?= implode(',', [$status_map['Delivered']??0,$status_map['Processing']??0,$status_map['Shipped']??0,$status_map['Pending']??0,$status_map['Cancelled']??0]) ?>],
+      backgroundColor:['#10b981','#4f8ef7','#8b5cf6','#f59e0b','#ef4444'],
+      borderColor:'#111118',borderWidth:3,hoverOffset:5
+    }]
+  },options:{
+    responsive:false,cutout:'72%',
+    plugins:{legend:{display:false},
+      tooltip:{backgroundColor:'#16161f',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
+        callbacks:{label:function(c){return '  '+c.label+': '+c.parsed;}}}}
+  }});
+}
 
-  /* Donut */
-  var sd=document.getElementById('statusDonut');
-  if(sd){
-    new Chart(sd.getContext('2d'),{type:'doughnut',data:{
-      labels:['Delivered','Processing','Shipped','Pending','Cancelled'],
-      datasets:[{
-        data:[<?= implode(',', [$status_map['Delivered']??0,$status_map['Processing']??0,$status_map['Shipped']??0,$status_map['Pending']??0,$status_map['Cancelled']??0]) ?>],
-        backgroundColor:['#10b981','#4f8ef7','#8b5cf6','#f59e0b','#ef4444'],
-        borderColor:'#111118',borderWidth:3,hoverOffset:5
-      }]
-    },options:{
-      responsive:false,cutout:'72%',
-      plugins:{legend:{display:false},
-        tooltip:{backgroundColor:'#16161f',borderColor:'rgba(255,255,255,.1)',borderWidth:1,
-          callbacks:{label:function(c){return '  '+c.label+': '+c.parsed;}}}}
-    }});
-  }
+/* ── Dashboard Live Activity feed (inline feed panel, separate from topbar drawer) ── */
+var actSeenIds   = new Set();
+var actSeenCusts = new Set();
+var actLastPoll  = window._atbNow || <?= json_encode(date('Y-m-d H:i:s')) ?>;
+
+var oIco = '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>';
+var cIco = '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+var SC   = {Pending:'#f59e0b',Processing:'#4f8ef7',Shipped:'#8b5cf6',Delivered:'#10b981',Cancelled:'#ef4444'};
+
+function afmt(ts){
+  var d=new Date(ts.replace(' ','T')),diff=Math.round((Date.now()-d)/1000);
+  if(diff<60) return diff+'s ago';
+  if(diff<3600) return Math.round(diff/60)+'m ago';
+  return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+function actPrepend(html){
+  var list=document.getElementById('actList');
+  var empty=document.getElementById('actEmpty');
+  if(empty) empty.remove();
+  list.insertAdjacentHTML('afterbegin',html);
+  var items=list.querySelectorAll('.dact-item');
+  if(items.length>20) items[items.length-1].remove();
+}
+
+function actBuildOrder(o,isNew){
+  var nb=isNew?'<span class="dact-new">NEW</span>':'';
+  return '<div class="dact-item">'+
+    '<div class="dact-ico dact-ico--order">'+oIco+'</div>'+
+    '<div class="dact-body"><span class="dact-title">Order #'+o.id+' · <span style="color:'+(SC[o.status]||'#9997a6')+'">'+o.status+'</span></span>'+
+    '<span class="dact-sub">'+o.customer+' — £'+parseFloat(o.total).toFixed(2)+'</span></div>'+
+    '<div class="dact-right"><span class="dact-time">'+afmt(o.created_at)+'</span>'+nb+'</div></div>';
+}
+
+function actBuildCust(c,isNew){
+  var nb=isNew?'<span class="dact-new">NEW</span>':'';
+  return '<div class="dact-item">'+
+    '<div class="dact-ico dact-ico--customer">'+cIco+'</div>'+
+    '<div class="dact-body"><span class="dact-title">'+c.name+' joined</span>'+
+    '<span class="dact-sub">'+c.email+'</span></div>'+
+    '<div class="dact-right"><span class="dact-time">'+afmt(c.created_at)+'</span>'+nb+'</div></div>';
+}
+
+/* Seed feed from same data used by topbar */
+var seed=window._atbInitOrders||[], cseed=window._atbInitCusts||[];
+var all=[];
+seed.forEach(function(o){ all.push({t:'o',d:o,ts:o.created_at}); actSeenIds.add(o.id); });
+cseed.forEach(function(c){ all.push({t:'c',d:c,ts:c.created_at}); actSeenCusts.add(c.email); });
+all.sort(function(a,b){ return a.ts<b.ts?1:-1; });
+all.forEach(function(x){
+  actPrepend(x.t==='o'?actBuildOrder(x.d,false):actBuildCust(x.d,false));
+});
+
+function actPoll(){
+  fetch('/melody-masters-online-store/admin/api_activity.php?since='+encodeURIComponent(actLastPoll))
+    .then(function(r){return r.json();})
+    .then(function(data){
+      actLastPoll=data.server_time;
+      (data.orders||[]).filter(function(o){return !actSeenIds.has(o.id);}).reverse().forEach(function(o){
+        actSeenIds.add(o.id); actPrepend(actBuildOrder(o,true));
+      });
+      (data.customers||[]).filter(function(c){return !actSeenCusts.has(c.email);}).reverse().forEach(function(c){
+        actSeenCusts.add(c.email); actPrepend(actBuildCust(c,true));
+      });
+      var s=document.getElementById('actStatus');
+      if(s) s.textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    })
+    .catch(function(){
+      var s=document.getElementById('actStatus'); if(s) s.textContent='Retrying…';
+    });
+}
+setInterval(actPoll,30000);
+var initSt=document.getElementById('actStatus');
+if(initSt) initSt.textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
 })();
 </script>

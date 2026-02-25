@@ -264,34 +264,12 @@
 }
 
 .admin-topbar-badge {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  background: rgba(200,151,60,0.1);
-  color: var(--gold);
-  border: 1px solid rgba(200,151,60,0.22);
-  padding: 3px 9px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.admin-topbar-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(200,151,60,0.12);
-  color: var(--gold);
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid rgba(200,151,60,0.2);
+  /* legacy — now rendered as .admin-topbar-role inside layout.php */
+  display: none;
 }
 
 .admin-topbar-name {
+  /* legacy standalone span — now inside .admin-topbar-user-info */
   font-size: 13px;
   color: var(--mid);
   font-weight: 500;
@@ -1104,8 +1082,8 @@
 
 @media (max-width: 540px) {
   .dash-snapshot        { grid-template-columns: 1fr 1fr; }
-  .admin-topbar-badge   { display: none; }
   .admin-topbar-name    { display: none; }
+  .admin-topbar-user-info { display: none; }
   .dash-quicklinks .admin-btn { flex: 1; justify-content: center; }
 }
 
