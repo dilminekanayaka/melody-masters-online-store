@@ -63,10 +63,10 @@ adminHead('Products', 'products');
 <?php endif; ?>
 
 <!-- ── FILTER BAR ── -->
-<div class="admin-filter-bar">
-  <form method="GET" action="products.php" class="admin-filter-form">
+<div class="admin-filter-bar prod-filter-bar">
+  <form method="GET" action="products.php" class="admin-filter-form prod-filter-form">
     <input type="text" name="q" value="<?= htmlspecialchars($search) ?>"
-           placeholder="Search products…" class="admin-input">
+           placeholder="Search products…" class="admin-input prod-search-input">
     <select name="cat" class="admin-select">
       <option value="0">All Categories</option>
       <?php foreach ($categories as $c): ?>
@@ -75,23 +75,25 @@ adminHead('Products', 'products');
     </select>
     <select name="stock" class="admin-select">
       <option value="">All Stock</option>
-      <option value="good" <?= $stock_f==='good'?'selected':'' ?>>Good (>5)</option>
+      <option value="good" <?= $stock_f==='good'?'selected':'' ?>>Good (&gt;5)</option>
       <option value="low"  <?= $stock_f==='low' ?'selected':'' ?>>Low (1-5)</option>
       <option value="out"  <?= $stock_f==='out' ?'selected':'' ?>>Out of Stock</option>
     </select>
-    <button type="submit" class="admin-btn admin-btn--primary">Filter</button>
-    <?php if ($search || $cat_f || $stock_f): ?>
-    <a href="products.php" class="admin-btn admin-btn--ghost">Clear</a>
-    <?php endif; ?>
+    <div class="prod-filter-btns">
+      <button type="submit" class="admin-btn admin-btn--primary">Filter</button>
+      <?php if ($search || $cat_f || $stock_f): ?>
+      <a href="products.php" class="admin-btn admin-btn--ghost">Clear</a>
+      <?php endif; ?>
+    </div>
   </form>
-  <div style="display:flex;align-items:center;gap:12px;">
+  <div class="prod-bar-right">
     <span class="admin-result-count"><?= number_format($total_rows) ?> product<?= $total_rows !== 1 ? 's' : '' ?></span>
     <a href="add_product.php" class="admin-btn admin-btn--primary">+ Add Product</a>
   </div>
 </div>
 
-<!-- ── PRODUCTS TABLE ── -->
-<div class="admin-panel">
+<!-- ── PRODUCTS TABLE (desktop) ── -->
+<div class="admin-panel prod-table-panel">
   <div class="admin-table-wrap">
     <table class="admin-table">
       <thead>
@@ -155,5 +157,170 @@ adminHead('Products', 'products');
   </div>
   <?php endif; ?>
 </div>
+
+<!-- ── PRODUCTS CARD LIST (mobile ≤640px) ── -->
+<div class="prod-card-list">
+  <?php if (empty($products)): ?>
+    <div class="admin-flash" style="text-align:center;color:var(--muted);">No products found.</div>
+  <?php endif; ?>
+  <?php foreach ($products as $prod):
+    $img = $prod['image']
+      ? '/melody-masters-online-store/assets/images/' . htmlspecialchars($prod['image'])
+      : '/melody-masters-online-store/assets/images/placeholder.png';
+    $stock_cls = $prod['stock'] == 0 ? 'admin-stock--out' : ($prod['stock'] <= 5 ? 'admin-stock--low' : 'admin-stock--ok');
+  ?>
+  <div class="prod-card">
+    <img src="<?= $img ?>" alt="<?= htmlspecialchars($prod['name']) ?>" class="prod-card-img">
+    <div class="prod-card-body">
+      <div class="prod-card-name"><?= htmlspecialchars($prod['name']) ?></div>
+      <div class="prod-card-meta">
+        <span class="prod-card-cat"><?= htmlspecialchars($prod['category'] ?? '—') ?></span>
+        <span class="admin-amount" style="font-size:13px;">£<?= number_format((float)$prod['price'], 2) ?></span>
+      </div>
+      <div class="prod-card-badges">
+        <span class="admin-stock <?= $stock_cls ?>">Stock: <?= $prod['stock'] ?></span>
+        <?php if ($prod['type'] === 'digital'): ?>
+          <span class="admin-type-digital">Digital</span>
+        <?php else: ?>
+          <span class="admin-type-physical">Physical</span>
+        <?php endif; ?>
+      </div>
+      <div class="prod-card-actions">
+        <a href="edit_product.php?id=<?= $prod['id'] ?>" class="admin-btn admin-btn--primary" style="height:30px;font-size:12px;padding:0 14px;">Edit</a>
+        <a href="products.php?delete=<?= $prod['id'] ?>"
+           class="admin-btn admin-btn--ghost prod-card-delete"
+           onclick="return confirm('Delete \'<?= htmlspecialchars(addslashes($prod['name'])) ?>\'?')">Delete</a>
+      </div>
+    </div>
+  </div>
+  <?php endforeach; ?>
+
+  <?php if ($total_pages > 1): ?>
+  <div class="admin-pagination" style="padding:14px 0 4px;">
+    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+    <a href="?p=<?= $i ?>&q=<?= urlencode($search) ?>&cat=<?= $cat_f ?>&stock=<?= $stock_f ?>"
+       class="admin-page-btn <?= $i === $page ? 'is-active' : '' ?>"><?= $i ?></a>
+    <?php endfor; ?>
+  </div>
+  <?php endif; ?>
+</div>
+
+<style>
+/* ── Products page — scoped responsive styles ── */
+
+/* Filter bar */
+.prod-filter-form  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.prod-filter-btns  { display: flex; gap: 6px; }
+.prod-bar-right    { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+/* Mobile card list hidden on desktop */
+.prod-card-list { display: none; }
+
+/* ─── ≤ 640px: switch to cards ─── */
+@media (max-width: 640px) {
+  /* Hide desktop table */
+  .prod-table-panel { display: none; }
+
+  /* Show card list */
+  .prod-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Filter bar stacks */
+  .prod-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .prod-filter-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .prod-filter-form .admin-input,
+  .prod-filter-form .admin-select { width: 100%; }
+  .prod-filter-btns { justify-content: flex-start; }
+  .prod-bar-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Individual product card */
+  .prod-card {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    padding: 12px;
+    align-items: flex-start;
+  }
+  .prod-card-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 3px;
+    flex-shrink: 0;
+  }
+  .prod-card-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .prod-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .prod-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .prod-card-cat {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .prod-card-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .prod-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .prod-card-delete {
+    color: #e57373 !important;
+    border-color: rgba(229,115,115,0.3) !important;
+    height: 30px;
+    font-size: 12px;
+    padding: 0 14px;
+  }
+  .prod-card-delete:hover {
+    background: rgba(229,115,115,0.08) !important;
+  }
+}
+
+/* ─── ≤ 390px: tighten further ─── */
+@media (max-width: 390px) {
+  .prod-card { padding: 10px; gap: 10px; }
+  .prod-card-img { width: 48px; height: 48px; }
+  .prod-card-name { font-size: 12px; }
+}
+</style>
 
 <?php adminFoot(); ?>

@@ -75,10 +75,13 @@ function adminHead(string $title, string $active = ''): void {
 
   /* ─── Drawer ─── */
   .notif-drawer {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
+    position: fixed;
+    top: 58px;           /* sits just below the topbar (58px tall) */
+    right: 16px;
     width: 340px;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
     background: #1a1a27;
     border: 1px solid rgba(255,255,255,.1);
     border-radius: 12px;
@@ -86,7 +89,7 @@ function adminHead(string $title, string $active = ''): void {
     z-index: 10000;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(-6px) scale(.98);
+    transform: translateY(-8px) scale(.98);
     pointer-events: none;
     transition: opacity .18s ease, transform .18s ease;
   }
@@ -94,6 +97,47 @@ function adminHead(string $title, string $active = ''): void {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
+  }
+
+  /* List must scroll inside the fixed drawer */
+  .notif-list {
+    max-height: 360px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* Mobile: shrink topbar to 52px so adjust top */
+  @media (max-width: 768px) {
+    .notif-drawer {
+      top: 52px;
+      right: 12px;
+      width: min(320px, calc(100vw - 24px));
+    }
+    .notif-list { max-height: calc(100vh - 160px); }
+  }
+
+  /* Small phone: fill almost full width */
+  @media (max-width: 540px) {
+    .notif-drawer {
+      top: 50px;
+      left: 8px;
+      right: 8px;
+      width: auto;
+      border-radius: 10px;
+      max-height: calc(100vh - 70px);
+    }
+    .notif-list { max-height: calc(100vh - 160px); }
+  }
+
+  /* 390px: edge-to-edge */
+  @media (max-width: 420px) {
+    .notif-drawer {
+      top: 48px;
+      left: 6px;
+      right: 6px;
+      width: auto;
+      border-radius: 8px;
+    }
   }
 
   .notif-drawer-head {
@@ -344,6 +388,9 @@ window._nSeedNow    = <?= $seed_json_now ?>;
 
   </aside>
 
+  <!-- Sidebar backdrop (mobile) -->
+  <div class="admin-sidebar-backdrop" id="sidebarBackdrop"></div>
+
   <!-- ── MAIN ── -->
   <div class="admin-main">
 
@@ -412,17 +459,31 @@ function adminFoot(): void { ?>
 </div><!-- /admin-shell -->
 
 <script>
-/* ── Sidebar toggle ── */
+/* ── Sidebar toggle with backdrop ── */
 (function () {
-  var sidebar = document.getElementById('adminSidebar');
-  var toggle  = document.getElementById('sidebarToggle');
+  var sidebar   = document.getElementById('adminSidebar');
+  var toggle    = document.getElementById('sidebarToggle');
+  var backdrop  = document.getElementById('sidebarBackdrop');
   if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', function () { sidebar.classList.toggle('is-open'); });
-  document.addEventListener('click', function (e) {
-    if (sidebar.classList.contains('is-open') &&
-        !sidebar.contains(e.target) && e.target !== toggle) {
-      sidebar.classList.remove('is-open');
-    }
+
+  function openSidebar() {
+    sidebar.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    sidebar.classList.contains('is-open') ? closeSidebar() : openSidebar();
+  });
+  if (backdrop) backdrop.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSidebar();
   });
 })();
 

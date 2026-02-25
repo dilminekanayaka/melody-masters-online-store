@@ -1044,20 +1044,40 @@
 
 /* ════════════════════════════════════
    RESPONSIVE BREAKPOINTS
-════════════════════════════════════ */
-/* ═══════════════════════════════════════════════════
-   ADMIN RESPONSIVE — comprehensive mobile pass
+   1400px → wide desktop trim
    1200px → tablet landscape
-    900px  → tablet portrait / sidebar collapse
-    768px  → large phone
-    540px  → small phone
-    380px  → very small phone
-═══════════════════════════════════════════════════ */
+    900px → sidebar off-canvas
+    768px → large phone
+    540px → small phone
+    390px → iPhone 14 Pro target
+    360px → very small phone
+════════════════════════════════════ */
 
+/* ── Sidebar backdrop (mobile) ── */
+.admin-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.admin-sidebar-backdrop.is-visible {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .admin-sidebar-backdrop { display: block; pointer-events: none; }
+  .admin-sidebar-backdrop.is-visible { pointer-events: auto; }
+}
+
+/* ── 1400 px ── */
 @media (max-width: 1400px) {
   .dash-snapshot { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* ── 1200 px: tablet landscape ── */
 @media (max-width: 1200px) {
   .admin-kpi-grid   { grid-template-columns: repeat(2, 1fr); }
   .admin-dash-row   { grid-template-columns: 1fr; }
@@ -1074,79 +1094,138 @@
   }
   .admin-sidebar.is-open {
     transform: translateX(0);
-    box-shadow: 4px 0 32px rgba(0,0,0,.6);
+    box-shadow: 6px 0 40px rgba(0,0,0,.7);
   }
   .admin-main           { margin-left: 0; }
   .admin-sidebar-toggle { display: flex; }
   .admin-form-grid      { grid-template-columns: 1fr; }
   .admin-col-2          { grid-column: span 1; }
-  .dash-welcome         { flex-direction: column; align-items: flex-start; }
-  .dash-quicklinks      { width: 100%; }
+  .dash-welcome         { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .dash-quicklinks      { width: 100%; flex-wrap: wrap; }
   .dash-snapshot        { grid-template-columns: repeat(2, 1fr); }
+  .admin-kpi-grid       { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ── 768 px: large phone ── */
 @media (max-width: 768px) {
-  .admin-content  { padding: 14px 14px 32px; }
-  .admin-topbar   { padding: 0 14px; height: 52px; }
-  .admin-topbar-title { font-size: 14px; }
-  .admin-kpi-grid { grid-template-columns: 1fr 1fr; }
-  .admin-filter-bar  { flex-direction: column; align-items: stretch; }
-  .admin-filter-form { flex-direction: column; }
+  /* Layout */
+  .admin-content  { padding: 14px 14px 32px; gap: 14px; }
+  .admin-topbar   { padding: 0 14px; height: 52px; gap: 10px; }
+  .admin-topbar-title  { font-size: 14px !important; }
+
+  /* Grids */
+  .admin-kpi-grid      { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .admin-dash-row      { grid-template-columns: 1fr; }
+  .dash-bottom-row     { grid-template-columns: 1fr; }
+  .dash-snapshot       { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+  /* Filter bars */
+  .admin-filter-bar    { flex-direction: column; align-items: stretch; gap: 10px; }
+  .admin-filter-form   { flex-direction: column; align-items: stretch; }
+  .admin-filter-form .admin-input,
+  .admin-filter-form .admin-select { width: 100%; }
+  .admin-result-count  { text-align: right; }
 
   /* Tables scroll horizontally */
   .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .admin-table      { min-width: 560px; }
+  .admin-table      { min-width: 540px; }
 
-  /* Order detail panel */
+  /* Order detail */
   .od-layout    { grid-template-columns: 1fr; }
   .od-summary   { position: static; }
 
-  /* Notification drawer — full width on big phone */
-  .notif-drawer { width: 320px; }
 
-  /* Dashboard panels */
-  .dash-bottom-row  { grid-template-columns: 1fr; }
-  .admin-dash-row   { grid-template-columns: 1fr; }
+  /* Quick-links: buttons wrap and stretch */
+  .dash-quicklinks .admin-btn { flex: 1 1 auto; justify-content: center; min-width: 120px; }
+
+  /* Welcome section */
+  .dash-welcome-title { font-size: 17px !important; }
+
+  /* KPI compact */
+  .admin-kpi { padding: 14px 14px; gap: 12px; }
+  .admin-kpi-icon { width: 36px; height: 36px; }
+  .admin-kpi-value { font-size: 18px; }
 }
 
 /* ── 540 px: small phone ── */
 @media (max-width: 540px) {
-  .admin-content  { padding: 12px 12px 28px; }
-  .admin-topbar   { padding: 0 12px; }
-  .admin-kpi-grid { grid-template-columns: 1fr 1fr; }
-  .dash-snapshot  { grid-template-columns: 1fr 1fr; }
+  .admin-content  { padding: 12px 12px 28px; gap: 12px; }
+  .admin-topbar   { padding: 0 12px; height: 50px; }
 
-  /* Hide user info text — keep avatar only */
+  /* Hide name/role text — save topbar space */
   .admin-topbar-user-info { display: none; }
 
-  /* Quick-links fill width */
-  .dash-quicklinks .admin-btn { flex: 1; justify-content: center; }
 
-  /* Topbar right stack */
   .admin-topbar-right { gap: 6px; }
 
-  /* Notification drawer: anchored full screen */
-  .notif-drawer {
-    position: fixed;
-    top: 52px; left: 8px; right: 8px;
-    width: auto;
-    max-height: calc(100vh - 70px);
-  }
-
-  /* Admin flash / alerts */
+  /* Flash alerts compact */
   .admin-flash { font-size: 12px; padding: 10px 14px; }
 
   /* Table cells compact */
   .admin-table th,
-  .admin-table td { padding: 10px 12px; font-size: 12px; }
+  .admin-table td { padding: 9px 10px; font-size: 12px; }
+
+  /* Snapshot & KPI: 2 col */
+  .dash-snapshot  { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .admin-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Quick-links fill width */
+  .dash-quicklinks .admin-btn { flex: 1; justify-content: center; }
+
+  /* Pagination compact */
+  .admin-page-btn { min-width: 28px; height: 28px; font-size: 11px; }
 }
 
-/* ── 380 px: very small phone ── */
-@media (max-width: 380px) {
-  .dash-snapshot  { grid-template-columns: 1fr; }
-  .admin-kpi-grid { grid-template-columns: 1fr; }
+/* ── 390 px: iPhone 14 Pro target ── */
+@media (max-width: 390px) {
+  .admin-content  { padding: 10px 10px 24px; gap: 10px; }
+  .admin-topbar   { padding: 0 10px; height: 48px; gap: 6px; }
+  .admin-topbar-title { font-size: 13px !important; }
+
+  /* Single column everything */
+  .admin-kpi-grid { grid-template-columns: 1fr; gap: 8px; }
+  .dash-snapshot  { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* KPI very compact */
+  .admin-kpi { padding: 12px 12px; gap: 10px; }
+  .admin-kpi-icon { width: 32px; height: 32px; border-radius: 8px; }
+  .admin-kpi-value { font-size: 16px; }
+  .admin-kpi-label { font-size: 10px; }
+
+  /* Snap cards compact */
+  .dash-snap-card { padding: 10px 12px; }
+  .dash-snap-value { font-size: 17px; }
+
+  /* Panel heads compact */
+  .admin-panel-head { padding: 12px 14px; }
+  .admin-panel-title { font-size: 13px !important; }
+
+  /* Table rows ultra-compact */
+  .admin-table th,
+  .admin-table td { padding: 8px 10px; font-size: 11px; }
+
+  /* Tables even narrower min-width so less scroll */
+  .admin-table { min-width: 480px; }
+
+  /* Buttons compact */
+  .admin-btn { padding: 0 14px; height: 32px; font-size: 12px; }
+
+  /* Form inputs */
+  .admin-input,
+  .admin-select { height: 34px; font-size: 12px; }
+
+  /* Quick-links: single row, full-width buttons */
+  .dash-quicklinks { gap: 6px; }
+  .dash-quicklinks .admin-btn { flex: 1; padding: 0 10px; }
+
+}
+
+/* ── 360 px: very small phone ── */
+@media (max-width: 360px) {
   .admin-topbar-title { display: none; }
+  .dash-snapshot { grid-template-columns: 1fr; }
+  .admin-kpi-grid { grid-template-columns: 1fr; }
+  .admin-content { padding: 8px 8px 20px; }
 }
 
 /* ── Chart wrapper ── */
