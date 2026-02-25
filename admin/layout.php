@@ -387,13 +387,12 @@ window._nSeedNow    = <?= $seed_json_now ?>;
           </div>
         </div>
 
-        <!-- User block: avatar + name + role -->
+        <!-- User block: name + role -->
         <div class="admin-topbar-user">
           <div class="admin-topbar-user-info">
             <span class="admin-topbar-name"><?= htmlspecialchars($admin_name) ?></span>
             <span class="admin-topbar-role<?= $is_staff ? ' admin-topbar-role--staff' : '' ?>"><?= $role_label ?></span>
           </div>
-          <div class="admin-topbar-avatar"><?= htmlspecialchars($initials) ?></div>
         </div>
 
       </div>
