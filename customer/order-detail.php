@@ -17,7 +17,7 @@ $uid      = (int)$_SESSION['user_id'];
 $order_id = (int)$_GET['id'];
 
 /* ============================================================
-   FETCH ORDER (belongs to the logged-in user only)
+   FETCH ORDER 
 ============================================================ */
 $stmt = mysqli_prepare($conn,
     "SELECT * FROM orders WHERE id = ? AND user_id = ?"
@@ -84,7 +84,7 @@ foreach ($items as $item) {
     }
 }
 
-/* Step definitions — icon, label, desc, matching status value */
+
 $steps = $is_digital_only
     ? [
         [
@@ -362,7 +362,7 @@ if ($step_idx === false) $step_idx = -1;
 
       </aside>
 
-    </div><!-- /od-layout -->
+    </div>
 
   </div>
 </main>

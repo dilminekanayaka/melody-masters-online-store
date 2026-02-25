@@ -1,7 +1,3 @@
-/* ===================================================
-   MELODY MASTERS — E-COMMERCE STYLESHEET
-=================================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -25,7 +21,7 @@
   --red-bg:   rgba(192,57,43,0.1);
   --blue:     #2980b9;
 
-  --r:        6px;  /* border radius */
+  --r:        6px; 
   --ease:     cubic-bezier(0.4, 0, 0.2, 1);
   --t:        0.2s var(--ease);
 }
@@ -54,11 +50,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   padding: 0 24px;
 }
 
-/* ===================================================
-   HEADER — 3-ROW E-COMMERCE HEADER
-=================================================== */
-
-
+/* HEADER */
 .header-main {
   background: var(--bg);
   border-bottom: 1px solid var(--line);
@@ -131,23 +123,23 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .search-btn:hover { background: var(--gold-lt); }
 
-/* Right actions block — pushes right on all sizes */
+/* Right actions block*/
 .header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  margin-left: auto;   /* keeps actions right-aligned even without the search bar */
+  margin-left: auto;   
 }
 
-/* Search toggle icon — hidden on desktop, shown on mobile */
+/* Search toggle icon */
 .header-search-toggle {
   display: none;
   background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--mid);          /* #aaa — matches other header icons */
+  color: var(--mid);        
   transition: color var(--t);
 }
 
@@ -198,7 +190,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .btn-header-register:hover { background: var(--gold-lt); }
 
-/* ===== USER MENU / AVATAR ===== */
+/* USER MENU */
 .user-menu {
   position: relative;
 }
@@ -407,7 +399,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   border-bottom-color: var(--gold);
 }
 
-/* Active category — set by PHP via is-active class */
+/* Active category */
 .header-nav-inner a.is-active,
 .header-nav-link.is-active {
   color: var(--gold);
@@ -415,7 +407,6 @@ h1,h2,h3,h4 { font-weight: 600; }
   font-weight: 600;
 }
 
-/* header-nav-link is the class added by PHP nav_link() */
 .header-nav-link {
   font-size: 13px;
   font-weight: 500;
@@ -432,9 +423,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   border-bottom-color: var(--gold);
 }
 
-/* ===================================================
-   HERO BANNER
-=================================================== */
+/* HERO BANNER */
 .hero {
   position: relative;
   height: 68vh;
@@ -501,9 +490,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   flex-wrap: wrap;
 }
 
-/* ===================================================
-   BUTTONS
-=================================================== */
+/* BUTTONS */
 .btn-primary {
   display: inline-block;
   padding: 12px 24px;
@@ -554,9 +541,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .btn-add-cart:hover { background: var(--gold-lt); }
 
-/* ===================================================
-   TRUST BAR
-=================================================== */
+/* TRUST BAR */
 .trust-bar {
   background: var(--bg-alt);
   border-top: 1px solid var(--line);
@@ -583,9 +568,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .trust-item svg { color: var(--gold); flex-shrink: 0; }
 
-/* ===================================================
-   SECTIONS
-=================================================== */
+/* SECTIONS */
 .section {
   padding: 60px 0;
 }
@@ -620,16 +603,14 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .section-link:hover { color: var(--gold-lt); }
 
-/* ===================================================
-   BEST SELLERS — extras
-=================================================== */
+/* BEST SELLERS — extras */
 .section-subtitle {
   font-size: 13px;
   color: var(--muted);
   margin-top: 2px;
 }
 
-/* Rank badge — top-left of card image */
+/* Rank badge */
 .bs-rank-badge {
   position: absolute;
   top: 12px;
@@ -645,10 +626,10 @@ h1,h2,h3,h4 { font-weight: 600; }
   border-radius: 4px;
 }
 
-/* Cards need relative positioning for the badge */
+
 .product-card { position: relative; }
 
-/* "X sold" green pill */
+
 .bs-sold-badge {
   font-size: 10px;
   font-weight: 700;
@@ -669,9 +650,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   border-radius: var(--r);
 }
 
-/* ===================================================
-   CATEGORY GRID
-=================================================== */
+/* CATEGORY GRID */
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -679,7 +658,7 @@ h1,h2,h3,h4 { font-weight: 600; }
   gap: 12px;
 }
 
-/* First card spans 2 rows */
+
 .cat-card--lg {
   grid-row: span 2;
 }
@@ -741,9 +720,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .cat-card:hover .cat-arrow { transform: translateX(4px); }
 
-/* ===================================================
-   PRODUCT GRID & CARDS
-=================================================== */
+/* PRODUCT GRID & CARDS */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1590,7 +1567,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 
 .filter-clear-all:hover { color: #e57373; }
 
-/* Shop grid (same as product-grid but override column count) */
+
 .shop-grid {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -4059,14 +4036,7 @@ h1,h2,h3,h4 { font-weight: 600; }
 }
 
 /* =====================================================
-   GLOBAL MOBILE RESPONSIVE — 390 × 844 FIRST PASS
-   Primary target : iPhone 14 / Pro  (390 × 844 CSS px)
-   Breakpoints:
-     1024px — tablet landscape
-      768px — tablet portrait / large phone
-      480px — portrait phone  ← main mobile target
-      390px — 390px viewport  ← specific fix level
-      360px — small phone
+   GLOBAL MOBILE RESPONSIVE 
 ===================================================== */
 
 /* ── Universal overflow guard (must be first) ── */
@@ -4089,10 +4059,10 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 
 /* =====================================================
    MOBILE SEARCH OVERLAY
-   (replaces .search-bar on mobile)
+  
 ===================================================== */
 .mobile-search-overlay {
-  display: none;         /* hidden on desktop */
+  display: none;        
 }
 
 @media (max-width: 768px) {
@@ -4170,7 +4140,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
   .user-menu-btn      { padding: 5px 8px 5px 5px; gap: 5px; }
 }
 
-/* Category nav — scrollable on mobile */
+/* Category nav */
 @media (max-width: 768px) {
   .header-nav-inner {
     padding: 0 12px;
@@ -4183,7 +4153,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
   .header-nav-link  { font-size: 12px; padding: 9px 10px; white-space: nowrap; }
 }
 
-/* User dropdown — full-width on mobile */
+/* User dropdown  */
 @media (max-width: 480px) {
   .user-dropdown {
     position: fixed;
@@ -4214,7 +4184,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   TRUST BAR  (4 items → 2×2 grid on mobile)
+   TRUST BAR  
 ===================================================== */
 .trust-bar-inner {
   display: flex;
@@ -4234,7 +4204,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   CATEGORY GRID  (3-col + span → 2-col → 1-col)
+   CATEGORY GRID  
 ===================================================== */
 @media (max-width: 1024px) {
   .cat-grid {
@@ -4262,7 +4232,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   PRODUCT GRID  (4-col → 2-col → 2-col → 1-col)
+   PRODUCT GRID  
 ===================================================== */
 @media (max-width: 1024px) {
   .product-grid { grid-template-columns: repeat(3, 1fr); }
@@ -4288,7 +4258,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   BRAND GRID  (5-col → 3-col → 2-col)
+   BRAND GRID  
 ===================================================== */
 @media (max-width: 768px) {
   .brand-grid { grid-template-columns: repeat(3, 1fr); }
@@ -4321,7 +4291,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   SHOP PAGE — sidebar + product grid
+   SHOP PAGE 
 ===================================================== */
 @media (max-width: 960px) {
   .shop-layout { grid-template-columns: 200px 1fr; }
@@ -4331,7 +4301,6 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
   .shop-layout  { grid-template-columns: 1fr; }
   .shop-sidebar {
     position: static;
-    /* collapsed by default on mobile — JS can toggle .is-open */
     display: none;
   }
   .shop-sidebar.is-open { display: block; }
@@ -4507,7 +4476,6 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
   .footer-tagline { color: var(--dim); }
 }
 
-/* Grid-based multi-column footer (if added later) */
 @media (max-width: 768px) {
   .footer-grid  { grid-template-columns: 1fr 1fr; gap: 24px; }
   .footer-brand { grid-column: 1 / -1; }
@@ -4529,7 +4497,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   NOTIFICATION DRAWER (customer-side)
+   NOTIFICATION DRAWER 
 ===================================================== */
 @media (max-width: 480px) {
   .notif-drawer {
@@ -4547,9 +4515,9 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 /* =====================================================
-   SHOP PAGE — mobile sidebar filter toggle
+   SHOP PAGE 
 ===================================================== */
-/* Add a "Filter" pill button above the grid on mobile — hidden on desktop */
+
 .mobile-filter-toggle {
   display: none;
 }
@@ -4578,9 +4546,7 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
   }
 }
 
-/* =====================================================
-   390px — very specific fine-tuning
-===================================================== */
+
 @media (max-width: 390px) {
   .container        { padding: 0 12px; }
   .product-grid     { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -4607,6 +4573,5 @@ pre, code    { overflow-x: auto; white-space: pre-wrap; word-break: break-word; 
 }
 
 
-/* end of stylesheet */
 
 

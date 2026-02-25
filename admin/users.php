@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/auth.php';
-require_manager(); // Staff cannot access this page
+require_manager(); 
 
-// Only superadmin can access this page
+
 if (!IS_SUPERADMIN) {
     header("Location: /melody-masters-online-store/admin/dashboard.php");
     exit;

@@ -4,7 +4,8 @@ require_once __DIR__ . '/auth.php';   // ensures admin session
 header('Content-Type: application/json');
 
 $since = isset($_GET['since']) ? $_GET['since'] : date('Y-m-d H:i:s', strtotime('-60 seconds'));
-// Sanitise: must be a valid datetime string
+
+
 if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $since)) {
     $since = date('Y-m-d H:i:s', strtotime('-60 seconds'));
 }
@@ -24,7 +25,7 @@ mysqli_stmt_bind_param($stmt, 's', $since);
 mysqli_stmt_execute($stmt);
 $out['orders'] = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
 
-/* New customers since $since */
+/* New customers since */
 $stmt2 = mysqli_prepare($conn,
     "SELECT name, email, created_at
      FROM users
