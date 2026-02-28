@@ -1,8 +1,5 @@
 <?php
-/**
- * MELODY MASTERS — SECURE DOWNLOAD HANDLER
- * Verifies order ownership and serves digital files.
- */
+
 include 'includes/init.php';
 include 'includes/db.php';
 

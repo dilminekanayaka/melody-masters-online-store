@@ -2,7 +2,7 @@
 include 'includes/init.php';
 include 'includes/db.php';
 
-// Featured products — 8 newest in-stock items
+// Featured products 
 $fp_res = mysqli_query($conn,
     "SELECT p.id, p.name, p.price, p.image, c.name AS category,
             COALESCE(ROUND(AVG(r.rating),1), 0) AS avg_rating,
@@ -172,7 +172,7 @@ $featured = mysqli_fetch_all($fp_res, MYSQLI_ASSOC);
 
 <!-- ===== BEST SELLERS ===== -->
 <?php
-// Query top-selling products by total quantity sold from order_items
+
 $bs_sql = "
   SELECT
     p.id,

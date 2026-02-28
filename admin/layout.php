@@ -1,6 +1,5 @@
 <?php
-// Admin layout helper — included at top of each admin page
-// Usage: adminHead('Page Title', 'active_key');
+
 function adminHead(string $title, string $active = ''): void {
     global $conn;
     include_once __DIR__ . '/../includes/init.php';
@@ -76,7 +75,7 @@ function adminHead(string $title, string $active = ''): void {
   /* ─── Drawer ─── */
   .notif-drawer {
     position: fixed;
-    top: 58px;           /* sits just below the topbar (58px tall) */
+    top: 58px;           
     right: 16px;
     width: 340px;
     max-height: calc(100vh - 80px);
@@ -451,12 +450,12 @@ window._nSeedNow    = <?= $seed_json_now ?>;
     <div class="admin-flash admin-flash--err">⛔ You don't have permission to access that page.</div>
     <?php endif; ?>
 <?php
-} // end adminHead()
+} 
 
 function adminFoot(): void { ?>
-    </div><!-- /admin-content -->
-  </div><!-- /admin-main -->
-</div><!-- /admin-shell -->
+    </div>
+  </div>
+</div>
 
 <script>
 /* ── Sidebar toggle with backdrop ── */
@@ -654,4 +653,4 @@ function adminFoot(): void { ?>
 </body>
 </html>
 <?php
-} // end adminFoot()
+} 

@@ -391,8 +391,8 @@ $member_since = date('F Y', strtotime($user['created_at']));
         </div>
         <?php endif; ?>
 
-      </div><!-- /acct-content -->
-    </div><!-- /acct-layout -->
+      </div>
+    </div>
 
   </div>
 </main>

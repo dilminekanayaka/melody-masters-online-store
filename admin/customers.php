@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/auth.php';
-require_manager(); // Staff cannot view customer data
+require_manager(); 
 require_once __DIR__ . '/layout.php';
 
 $search        = trim($_GET['q']   ?? '');

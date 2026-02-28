@@ -6,7 +6,7 @@ $categories = mysqli_fetch_all(mysqli_query($conn, "SELECT id, name, type FROM c
 $errors  = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if the POST request was truncated by PHP (happens if post_max_size is exceeded)
+    
     if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
         $max_post = ini_get('post_max_size');
         $errors[] = "The file you tried to upload is too large. The server limit is currently $max_post. Please try a smaller file or ask your administrator to increase the limit.";
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Handle image upload (thumbnail)
+    // Handle image upload 
     $image_filename = '';
     if (!empty($_FILES['image']['name'])) {
         $ext      = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
@@ -121,7 +121,7 @@ adminHead('Add Product', 'add_product');
                value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required>
       </div>
 
-      <!-- Type selector — drives which fields show below -->
+      <!-- Type selector  -->
       <div class="admin-form-group admin-col-2">
         <label class="admin-form-label">Product Type *</label>
         <div style="display:flex;gap:12px;">
@@ -138,7 +138,7 @@ adminHead('Add Product', 'add_product');
         </div>
       </div>
 
-      <!-- Category — filtered by selected product type -->
+      <!-- Category -->
       <div class="admin-form-group" id="row-category">
         <label class="admin-form-label">Category *</label>
         <select name="category_id" class="admin-select" id="catSelect">
@@ -160,21 +160,21 @@ adminHead('Add Product', 'add_product');
                value="<?= htmlspecialchars($_POST['price'] ?? '') ?>" required>
       </div>
 
-      <!-- Stock — physical only -->
+      <!-- Stock — physical -->
       <div class="admin-form-group" id="row-stock">
         <label class="admin-form-label">Stock Quantity</label>
         <input type="number" name="stock" class="admin-input" min="0" placeholder="0"
                value="<?= htmlspecialchars($_POST['stock'] ?? '0') ?>">
       </div>
 
-      <!-- Shipping — physical only -->
+      <!-- Shipping — physical -->
       <div class="admin-form-group" id="row-shipping">
         <label class="admin-form-label">Shipping Cost (£)</label>
         <input type="number" name="shipping_cost" class="admin-input" step="0.01" min="0" placeholder="0.00"
                value="<?= htmlspecialchars($_POST['shipping_cost'] ?? '0.00') ?>">
       </div>
 
-      <!-- Digital file upload — digital only -->
+      <!-- Digital file upload — digital -->
       <div class="admin-form-group" id="row-digital-file" style="display:none;">
         <label class="admin-form-label">Digital File * <span style="color:var(--dim);font-weight:400;">(PDF, MP3, MP4, ZIP, EPUB, WAV, FLAC…)</span></label>
         <div class="admin-file-drop" id="dlFileDrop">
@@ -186,7 +186,7 @@ adminHead('Add Product', 'add_product');
         </div>
       </div>
 
-      <!-- Download limit — digital only -->
+      <!-- Download limit — digital -->
       <div class="admin-form-group" id="row-dl-limit" style="display:none;">
         <label class="admin-form-label">Download Limit <span style="color:var(--dim);font-weight:400;">(0 = unlimited)</span></label>
         <input type="number" name="download_limit" class="admin-input" min="0" placeholder="0"
@@ -238,7 +238,7 @@ adminHead('Add Product', 'add_product');
 }
 </style>
 <script>
-// Type radio toggle
+
 var radios = document.querySelectorAll('input[name="type"]');
 var lblPhysical = document.getElementById('lbl-physical');
 var lblDigital  = document.getElementById('lbl-digital');
@@ -254,7 +254,7 @@ function applyType(val) {
   lblPhysical.classList.toggle('is-selected', !isDigital);
   lblDigital.classList.toggle('is-selected',   isDigital);
   
-  // Keep category visible for both, but required
+  
   rowCat.style.display     = ''; 
   catSelect.required       = true;
 

@@ -2,9 +2,6 @@
 include 'includes/init.php';
 include 'includes/db.php';
 
-/* ============================================================
-   CART ACTIONS — handled before any output
-============================================================ */
 
 // --- ADD TO CART ---
 if (isset($_GET['add']) && is_numeric($_GET['add'])) {
@@ -44,7 +41,7 @@ if (isset($_GET['remove']) && is_numeric($_GET['remove'])) {
     exit;
 }
 
-// --- UPDATE QUANTITIES (POST) ---
+// --- UPDATE QUANTITIES ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['qty'])) {
     foreach ($_POST['qty'] as $pid => $qty) {
         $pid = (int)$pid;
@@ -67,9 +64,7 @@ if (isset($_GET['clear'])) {
     exit;
 }
 
-/* ============================================================
-   COMPUTE TOTALS
-============================================================ */
+// --- COMPUTE TOTAL ---
 $cart_items       = $_SESSION['cart'] ?? [];
 $subtotal         = 0;
 $total_prod_ship  = 0;
@@ -89,13 +84,14 @@ $item_count         = array_sum(array_column($cart_items, 'qty'));
 <main class="cart-page">
   <div class="container">
 
-    <!-- Page heading -->
+    
     <div class="cart-heading">
       <h1>Your Cart <?php if ($item_count > 0): ?><span class="cart-count-label">(<?= $item_count ?> item<?= $item_count !== 1 ? 's' : '' ?>)</span><?php endif; ?></h1>
       <a href="shop.php" class="continue-shopping">← Continue Shopping</a>
     </div>
 
     <?php if (empty($cart_items)): ?>
+
     <!-- ===== EMPTY CART ===== -->
     <div class="cart-empty">
       <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" style="color:var(--muted)"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -105,7 +101,7 @@ $item_count         = array_sum(array_column($cart_items, 'qty'));
     </div>
 
     <?php else: ?>
-    <!-- ===== CART LAYOUT ===== -->
+     <!-- Cart Layout -->
     <div class="cart-layout">
 
       <!-- LEFT: Items -->
@@ -169,9 +165,9 @@ $item_count         = array_sum(array_column($cart_items, 'qty'));
           </div>
         </form>
 
-      </div><!-- /cart-items-col -->
+      </div>
 
-      <!-- RIGHT: Order Summary -->
+      <!-- Order Summary -->
       <aside class="cart-summary">
         <h2 class="summary-title">Order Summary</h2>
 

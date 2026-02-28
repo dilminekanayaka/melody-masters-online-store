@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     }
 
     if (empty($errors)) {
-        // Re-calculate totals server-side (never trust client)
+        
         $subtotal_final = 0;
         $total_prod_ship_final = 0;
         foreach ($cart_items as $c) {

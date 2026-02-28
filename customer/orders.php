@@ -140,7 +140,7 @@ function status_badge(string $status): string {
       </div>
       <?php endforeach; ?>
 
-    </div><!-- /orders-list -->
+    </div>
     <?php endif; ?>
 
   </div>
